@@ -30,12 +30,15 @@ jobs:
           restore-keys: ${{ runner.os }}-maven
 
       - name: Build with Maven
+        working-directory: shipping
         run: mvn clean install
 
       - name: Run tests
+        working-directory: shipping
         run: mvn test
 
       - name: Package the application
+        working-directory: shipping
         run: mvn package
 
   deploy:
@@ -57,6 +60,5 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
         run: |
-          scp -i $DEPLOY_KEY target/your-application.jar $DEPLOY_USER@$DEPLOY_SERVER:/path/to/deployment/directory
+          scp -i $DEPLOY_KEY shipping/target/shipping-0.0.1-SNAPSHOT.jar $DEPLOY_USER@$DEPLOY_SERVER:/path/to/deployment/directory
           ssh -i $DEPLOY_KEY $DEPLOY_USER@$DEPLOY_SERVER "bash /path/to/deployment/directory/deploy.sh"
-
