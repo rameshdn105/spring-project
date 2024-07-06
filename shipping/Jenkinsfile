@@ -1,1 +1,59 @@
+pipeline {
+    agent any 
+    stages {
+        stage(‘git checkout’) { 
+            steps {
+              
+            }
+        }
+    stages {
+        stage(‘Build’) { 
+            steps {
+               …….
+		try {			(to continue to next stage even after build fails)
+                    sh './build.sh'
+                } catch (err) {
+                    catchError {
+                        echo "Build failed, but we're continuing to the next stage anyway."
+                    }
+		}
+            }
+        }
+        stage(‘Test’) { 
+            steps {
+               …….
+            }
+        }
+        stage(‘Deploy’) { 
+            steps {
+                …….
+            }
+        }
+    }
+}
+post {
+        always {
+            script {
+                // Send email notification when build completes
+                emailext body: 'Build has completed',
+                subject: 'Build Notification',
+                to: 'user@example.com',
+                attachLog: true
+            }
+        }
+        success {
+            script {
+                // Send email notification when artifacts are stored
+                emailext body: 'Artifacts have been stored',
+                subject: 'Artifacts Notification',
+                to: 'user@example.com',
+                attachLog: true
+            }
+        }
+        failure {
+            script {
+                // Send email notification when deployment is completed
+                emailext body: 'Deployment has failed',
+                subject: 'Deployment Notification',
+                to: 'user@example.com
 
