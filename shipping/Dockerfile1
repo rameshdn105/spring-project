@@ -1,1 +1,10 @@
+FROM openjdk-11-jre
+
+WORKDIR /app
+
+COPY . /app
+
+RUN mvn clean package
+
+CMD ["java","-jar"]
 
